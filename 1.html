@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawyerHub Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1c20 0%, #0f1013 100%);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .search-container {
+            position: relative;
+            margin: 50px auto;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .search-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        .search-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+
+        .search-input-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 60px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #fff;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 50% 50%;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 50% 50%;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-top: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: none;
+        }
+
+        .suggestion {
+            padding: 12px 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.1);
+            border-color: rgba(0, 255, 204, 0.3);
+        }
+
+        .result-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .result-item:hover::before {
+            transform: translateX(100%);
+        }
+
+        .result-item p {
+            margin: 10px 0;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .result-item strong {
+            color: #00ffcc;
+            font-weight: 600;
+        }
+
+        .lawyer-name {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            background: linear-gradient(45deg, var(--badge-color-1), var(--badge-color-2));
+            color: var(--badge-text);
+        }
+
+        .tier-platinum {
+            --badge-color-1: #e5e4e2;
+            --badge-color-2: #b4b4b4;
+            --badge-text: #000;
+        }
+
+        .tier-gold {
+            --badge-color-1: #ffd700;
+            --badge-color-2: #ffa500;
+            --badge-text: #000;
+        }
+
+        .tier-silver {
+            --badge-color-1: #c0c0c0;
+            --badge-color-2: #a9a9a9;
+            --badge-text: #000;
+        }
+
+        .tier-standard {
+            --badge-color-1: #4a4a4a;
+            --badge-color-2: #2d2d2d;
+            --badge-text: #fff;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-right: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin: 5px;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            color: #000;
+        }
+
+        .view-profile-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            border: none;
+            border-radius: 50px;
+            color: #000;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .view-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+        }
+
+        .loading {
+            display: none;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .loading span {
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: #00ffcc;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        .loading span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2em;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 255, 204, 0.4),
+                             0 0 30px rgba(0, 255, 204, 0.2);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                padding: 20px;
+                margin: 20px auto;
+            }
+
+            .search-header h1 {
+                font-size: 2em;
+            }
+
+            .search-input {
+                padding: 15px 50px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-header">
+            <h1>Find Your Perfect Legal Partner</h1>
+            <p>Search by name, specialty, location, or any keyword</p>
+            <p style="font-size: 0.9em; margin-top: 5px; color: rgba(255, 255, 255, 0.5);">
+                Try: "criminal lawyer in Mumbai" or "divorce lawyer, Delhi"
+            </p>
+        </div>
+        <div class="search-input-container">
+            <span class="search-icon"></span>
+            <input type="text" id="searchInput" class="search-input" 
+                   placeholder="Example: corporate lawyer in Mumbai, or tax law specialist...">
+            <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+        <div class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        let localLawyerData = [];
+        const searchInput = document.getElementById('searchInput');
+        const resultsContainer = document.getElementById('results');
+        const loadingDiv = document.querySelector('.loading');
+        const suggestionsContainer = document.getElementById('searchSuggestions');
+
+        // Known locations for parsing
+        const knownLocations = [
+            'mumbai', 'delhi', 'bangalore', 'hyderabad', 'chennai', 'kolkata',
+            'pune', 'ahmedabad', 'chandigarh', 'lucknow'
+        ];
+
+        // Known specialties for parsing
+        const knownSpecialties = [
+            'corporate', 'family', 'criminal', 'tax', 'real estate', 'intellectual property',
+            'divorce', 'immigration', 'bankruptcy', 'civil'
+        ];
+
+        // Initialize inverted index
+        const invertedIndex = {};
+
+        function buildInvertedIndex(lawyers) {
+            lawyers.forEach(lawyer => {
+                const searchableFields = [
+                    lawyer.name,
+                    ...(Array.isArray(lawyer.specialty) ? lawyer.specialty : [lawyer.specialty]),
+                    lawyer.location?.city,
+                    lawyer.bio
+                ].filter(Boolean);
+
+                searchableFields.forEach(field => {
+                    const words = field.toLowerCase().split(/\s+/);
+                    words.forEach(word => {
+                        if (!invertedIndex[word]) {
+                            invertedIndex[word] = new Set();
+                        }
+                        invertedIndex[word].add(lawyer);
+                    });
+                });
+            });
+        }
+
+        function parseSearchQuery(query) {
+            const words = query.toLowerCase().split(/[,\s]+/).filter(word => word);
+            let location = '';
+            let specialty = '';
+            let generalTerms = [];
+
+            words.forEach((word, index) => {
+                if (word === 'in' && words[index + 1] && knownLocations.includes(words[index + 1])) {
+                    location = words[index + 1];
+                    return;
+                }
+
+                if (knownLocations.includes(word)) {
+                    location = word;
+                    return;
+                }
+
+                if (word.endsWith('law') || word.endsWith('lawyer')) {
+                    const potentialSpecialty = word.replace(/(law|lawyer)$/, '').trim();
+                    if (knownSpecialties.includes(potentialSpecialty)) {
+                        specialty = potentialSpecialty;
+                        return;
+                    }
+                }
+
+                if (knownSpecialties.includes(word)) {
+                    specialty = word;
+                    return;
+                }
+
+                generalTerms.push(word);
+            });
+
+            return {
+                generalTerms: generalTerms.join(' '),
+                location: location,
+                specialty: specialty
+            };
+        }
+
+        function localSearch(query) {
+            const parsedQuery = parseSearchQuery(query);
+            
+            let results = new Set(localLawyerData);
+
+            // Filter by location if specified
+            if (parsedQuery.location) {
+                results = new Set([...results].filter(lawyer => 
+                    lawyer.location?.city?.toLowerCase() === parsedQuery.location
+                ));
+            }
+
+            // Filter by specialty if specified
+            if (parsedQuery.specialty) {
+                results = new Set([...results].filter(lawyer => {
+                    const specialties = Array.isArray(lawyer.specialty) 
+                        ? lawyer.specialty.map(s => s.toLowerCase())
+                        : [lawyer.specialty?.toLowerCase()];
+                    return specialties.some(s => s?.includes(parsedQuery.specialty));
+                }));
+            }
+
+            // Filter by general terms
+            if (parsedQuery.generalTerms) {
+                const words = parsedQuery.generalTerms.split(/\s+/);
+                words.forEach(word => {
+                    if (invertedIndex[word]) {
+                        results = new Set([...results].filter(x => invertedIndex[word].has(x)));
+                    }
+                });
+            }
+
+            return Array.from(results);
+        }
+
+        function generateStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            
+            return `
+                ${'<i class="fas fa-star"></i>'.repeat(fullStars)}
+                ${hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                ${'<i class="far fa-star"></i>'.repeat(emptyStars)}
+            `;
+        }
+
+        function displayResults(lawyers) {
+            resultsContainer.innerHTML = '';
+            
+            if (lawyers.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 3rem; color: #00ffcc; margin-bottom: 1rem;"></i>
+                        <p>No lawyers found matching your criteria</p>
+                    </div>`;
+                return;
+            }
+
+            lawyers.forEach(lawyer => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+
+                const badges = lawyer.badges?.map(badge => 
+                    `<span class="badge">${badge}</span>`
+                ).join('') || '';
+
+                resultItem.innerHTML = `
+                    <div class="lawyer-name">
+                        ${lawyer.name}
+                        <span class="tier-badge tier-${lawyer.reward_tier?.toLowerCase() || 'standard'}">
+                            ${lawyer.reward_tier || 'Standard'}
+                        </span>
+                    </div>
+                    <p>
+                        <strong><i class="fas fa-gavel"></i> Specialty:</strong>
+                        ${Array.isArray(lawyer.specialty) ? lawyer.specialty.join(', ') : lawyer.specialty}
+                    </p>
+                    <p>
+                        <strong><i class="fas fa-map-marker-alt"></i> Location:</strong>
+                        ${lawyer.location?.city || 'Not specified'}
+                    </p>
+                    <p>
+                        <strong><i class="fas fa-star"></i> Rating:</strong>
+                        <span class="stars">${generateStarRating(lawyer.rating || 0)}</span>
+                        ${lawyer.rating?.toFixed(1) || '0.0'} (${lawyer.review_count || 0} reviews)
+                    </p>
+                    ${badges ? `<div style="margin: 10px 0;">${badges}</div>` : ''}
+                    <a href="/lawyers/${lawyer._id}" class="view-profile-btn">View Profile</a>
+                `;
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+
+        async function fetchLawyers() {
+            loadingDiv.style.display = 'flex';
+            resultsContainer.style.display = 'none';
+
+            try {
+                const parsedQuery = parseSearchQuery(searchInput.value);
+                const queryParams = new URLSearchParams({
+                    query: parsedQuery.generalTerms,
+                    location: parsedQuery.location,
+                    specialty: parsedQuery.specialty
+                });
+
+                const response = await fetch(`/search?${queryParams}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch lawyers');
+                }
+
+                const lawyers = await response.json();
+                localLawyerData = lawyers;
+                buildInvertedIndex(lawyers);
+                displayResults(lawyers);
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ff4444; margin-bottom: 1rem;"></i>
+                        <p>An error occurred while fetching results. Please try again later.</p>
+                    </div>`;
+            } finally {
+                loadingDiv.style.display = 'none';
+                resultsContainer.style.display = 'grid';
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        const debouncedSearch = debounce(() => {
+            const query = searchInput.value;
+            if (query.length >= 2) {
+                const results = localSearch(query);
+                displayResults(results);
+            } else if (query.length === 0) {
+                displayResults(localLawyerData);
+            }
+        }, 300);
+
+        // Event listeners
+        searchInput.addEventListener('input', debouncedSearch);
+
+        // Initial fetch
+        fetchLawyers();
+    </script>
+</body>
+</html>
