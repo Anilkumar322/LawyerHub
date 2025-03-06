@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lawyer.name }} - LawyerHub Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1c20 0%, #0f1013 100%);
+            color: #fff;
+        }
+
+        /* Header styles */
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #00ffcc;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Profile Sidebar */
+        .profile-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 300px;
+            background: url('/api/placeholder/300/300') center/cover;
+        }
+
+        .profile-info {
+            padding: 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .profile-specialty {
+            color: #00ffcc;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-right: 0.5rem;
+        }
+
+        .profile-location {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .profile-location i {
+            margin-right: 0.5rem;
+            color: #3399ff;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            background: linear-gradient(45deg, var(--badge-color-1), var(--badge-color-2));
+            color: var(--badge-text);
+            margin-bottom: 1rem;
+        }
+
+        .tier-standard {
+            --badge-color-1: #4a4a4a;
+            --badge-color-2: #2d2d2d;
+            --badge-text: #fff;
+        }
+
+        .contact-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+        }
+
+        /* Main Content Area */
+        .profile-main {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+        }
+
+        .section-content {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Reviews Section */
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .write-review-btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .write-review-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .reviewer-name {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .review-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+
+        .stars {
+        display: inline-flex;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .stars .fa-star {
+        color: rgba(255, 255, 255, 0.3);
+        transition: all 0.2s ease;
+        font-size: 24px;
+    }
+
+    .stars .fa-star:hover,
+    .stars .fa-star:hover ~ .fa-star {
+        color: #ffd700;
+        transform: scale(1.1);
+    }
+
+    .stars .fa-star.active {
+        color: #ffd700;
+    }
+
+    .stars[data-rating="5"] .fa-star:nth-child(n+1):nth-child(-n+5),
+    .stars[data-rating="4"] .fa-star:nth-child(n+1):nth-child(-n+4),
+    .stars[data-rating="3"] .fa-star:nth-child(n+1):nth-child(-n+3),
+    .stars[data-rating="2"] .fa-star:nth-child(n+1):nth-child(-n+2),
+    .stars[data-rating="1"] .fa-star:nth-child(1) {
+        color: #ffd700;
+    }
+
+    .stars:hover .fa-star {
+        transform: scale(1);
+    }
+
+    .stars .fa-star:hover {
+        transform: scale(1.2);
+    }
+
+        /* Review Filters */
+        .review-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            color: #000;
+            border-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner::after {
+            content: "";
+            width: 32px;
+            height: 32px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #00ffcc, #3399ff);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .page-btn:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        .notification {
+    position: fixed;
+    top: 20px;
+    right: -300px; /* Start off-screen */
+    background: linear-gradient(45deg, #00ffcc, #3399ff);
+    color: #000;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: right 0.3s ease-in-out;
+    max-width: 300px;
+}
+
+.notification.show {
+    right: 20px;
+}
+
+.notification i {
+    font-size: 20px;
+}
+
+.notification .message {
+    font-weight: 500;
+}
+
+.notification .close-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    padding: 0 5px;
+    font-size: 18px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.notification .close-btn:hover {
+    opacity: 1;
+}
+
+/* Star Rating Styles */
+/* Star Rating Styles */
+.stars {
+  display: inline-flex;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.stars .fa-star {
+  color: rgba(255, 255, 255, 0.3); /* Default color for empty stars */
+  transition: color 0.2s, transform 0.2s;
+  font-size: 24px;
+}
+
+.stars .fa-star.active,
+.stars .fa-star:hover,
+.stars .fa-star:hover ~ .fa-star {
+  color: #ffd700; /* Gold color for active stars */
+  transform: scale(1.1);
+}
+
+.stars .fa-star:hover ~ .fa-star {
+  color: rgba(255, 255, 255, 0.3); /* Reset stars after hovered star */
+}
+
+.stars .fa-star.active {
+  color: #ffd700;
+}
+
+.stars[data-rating="5"] .fa-star:nth-child(-n+5),
+.stars[data-rating="4"] .fa-star:nth-child(-n+4),
+.stars[data-rating="3"] .fa-star:nth-child(-n+3),
+.stars[data-rating="2"] .fa-star:nth-child(-n+2),
+.stars[data-rating="1"] .fa-star:nth-child(-n+1) {
+  color: #ffd700;
+}
+
+.stars:hover .fa-star {
+  transform: scale(1);
+}
+
+.stars .fa-star:hover {
+  transform: scale(1.2);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-balance-scale"></i>
+                LawyerHub
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/find-lawyers">Find Lawyers</a></li>
+                    <li><a href="/categories">Categories</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-image"></div>
+                    <div class="profile-info">
+                        <h1 class="profile-name">{{ lawyer.name }}</h1>
+                        <p class="profile-specialty">{{ lawyer.specialty|join(', ') }}</p>
+                        
+                        <div class="profile-rating">
+                            <div class="rating-container">
+                                <div class="stars" data-rating="{{ lawyer.rating }}">
+                                    <i class="fas fa-star" data-value="1"></i>
+                                    <i class="fas fa-star" data-value="2"></i>
+                                    <i class="fas fa-star" data-value="3"></i>
+                                    <i class="fas fa-star" data-value="4"></i>
+                                    <i class="fas fa-star" data-value="5"></i>
+                                </div>
+                                <div class="rating-text">
+                                    <span class="rating-number">{{ lawyer.rating }}</span>
+                                    <span class="review-count">({{ lawyer.review_count }} reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="profile-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            {{ lawyer.location.city }}, {{ lawyer.location.state }}
+                        </p>
+
+                        <span class="tier-badge tier-{{ lawyer.reward_tier|lower }}">
+                            {{ lawyer.reward_tier }}
+                        </span>
+
+                        <a href="#contact" class="contact-btn">Contact Lawyer</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <section>
+                    <h2 class="section-title">About</h2>
+                    <div class="section-content">{{ lawyer.bio }}</div>
+                </section>
+
+                <section>
+                    <h2 class="section-title">Education</h2>
+                    <div class="section-content">
+                        {% for edu in lawyer.education %}
+                            <div class="education-item">
+                                <h4>{{ edu.institution }}</h4>
+                                <p>{{ edu.degree }} ({{ edu.year }})</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="section-title">Experience</h2>
+                    <div class="section-content">
+                        {% for exp in lawyer.experience %}
+                            <div class="experience-item">
+                                <h4>{{ exp.position }}</h4>
+                                <p>{{ exp.company }} ({{ exp.years }})</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ lawyer.rating }}</div>
+                            <div class="stat-label">Average Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ lawyer.review_count }}</div>
+                            <div class="stat-label">Total Reviews</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Response Rate</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="reviews-header">
+                        <h2 class="section-title">Reviews</h2>
+                        <button class="write-review-btn" onclick="showReviewForm()">
+                            <i class="fas fa-star"></i> Write a Review
+                        </button>
+                    </div>
+
+                    <!-- Review Filters -->
+                    <div class="review-filters">
+                        <button class="filter-btn active" data-rating="all">All Reviews</button>
+                        <button class="filter-btn" data-rating="5">5 Stars</button>
+                        <button class="filter-btn" data-rating="4">4 Stars</button>
+                        <button class="filter-btn" data-rating="3">3 Stars</button>
+                        <button class="filter-btn" data-rating="2">2 Stars</button>
+                        <button class="filter-btn" data-rating="1">1 Star</button>
+                    </div>
+
+                    <div class="loading-spinner"></div>
+                    <div class="reviews-list" id="reviewList">
+                        {% for review in lawyer.recent_reviews %}
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            {{ review.reviewer_name[0]|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="reviewer-name">{{ review.reviewer_name }}</div>
+                                            <div class="stars">
+                                                {% for i in range(review.rating|int) %}
+                                                    <i class="fas fa-star"></i>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="review-date">
+                                        {{ review.created_at.strftime('%B %d, %Y') }}
+                                    </div>
+                                </div>
+                                <div class="review-content">{{ review.comment }}</div>
+                            </div>
+                        {% endfor %}
+                        
+                        {% if not lawyer.recent_reviews %}
+                            <div class="no-reviews" style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.6);">
+                                <p>No reviews yet. Be the first to write a review!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="pagination">
+                        <button class="page-btn" id="prevPage" disabled>Previous</button>
+                        <button class="page-btn" id="nextPage" disabled>Next</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewForm" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 1000;">
+        <div style="max-width: 600px; margin: 100px auto; background: linear-gradient(135deg, #1a1c20 0%, #0f1013 100%); padding: 2rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h2 style="color: #fff; margin-bottom: 1.5rem; font-size: 1.5rem;">Write a Review</h2>
+            <form onsubmit="submitReview(event)">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: #fff; margin-bottom: 0.5rem;">Rating</label>
+                    <div class="stars" data-rating="0">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                </div>
+    
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: #fff; margin-bottom: 0.5rem;">Your Review</label>
+                    <textarea
+                        id="reviewText"
+                        style="width: 100%; min-height: 150px; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #fff; resize: vertical;"
+                        placeholder="Share your experience with this lawyer..."
+                        required
+                    ></textarea>
+                </div>
+    
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="hideReviewForm()" style="padding: 0.8rem 1.5rem; background: none; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 50px; cursor: pointer;">
+                        Cancel
+                    </button>
+                    <button type="submit" style="padding: 0.8rem 1.5rem; background: linear-gradient(45deg, #00ffcc, #3399ff); color: #000; border: none; border-radius: 50px; font-weight: 600; cursor: pointer;">
+                        Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let currentFilter = "all";
+        const PAGE_SIZE = 5;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadReviews();
+            setupFilterListeners();
+            setupPaginationListeners();
+        });
+
+        function setupFilterListeners() {
+            const filterButtons = document.querySelectorAll(".filter-btn");
+            filterButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    filterButtons.forEach((btn) => btn.classList.remove("active"));
+                    button.classList.add("active");
+                    currentFilter = button.dataset.rating;
+                    currentPage = 1;
+                    loadReviews();
+                });
+            });
+        }
+
+        function setupPaginationListeners() {
+            document.getElementById("prevPage").addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadReviews();
+                }
+            });
+
+            document.getElementById("nextPage").addEventListener("click", () => {
+                currentPage++;
+                loadReviews();
+            });
+        }
+
+        async function loadReviews() {
+            const lawyerId = window.location.pathname.split("/")[2];
+            const reviewList = document.getElementById("reviewList");
+            const loadingSpinner = document.querySelector(".loading-spinner");
+
+            try {
+                // Show loading spinner
+                reviewList.style.display = "none";
+                loadingSpinner.style.display = "flex";
+
+                // Fetch reviews from the API
+                const response = await fetch(
+                    `/api/lawyers/${lawyerId}/reviews?page=${currentPage}&per_page=${PAGE_SIZE}` +
+                    (currentFilter !== "all" ? `&rating=${currentFilter}` : "")
+                );
+
+                if (!response.ok) throw new Error("Failed to fetch reviews");
+
+                const data = await response.json();
+                renderReviews(data.reviews);
+                updatePagination(data.total);
+            } catch (error) {
+                reviewList.innerHTML = `
+                    <div class="error-message">
+                        Failed to load reviews. Please try again later.
+                    </div>
+                `;
+            } finally {
+                loadingSpinner.style.display = "none";
+                reviewList.style.display = "block";
+            }
+        }
+
+        function renderReviews(reviews) {
+            const reviewList = document.getElementById("reviewList");
+
+            if (!reviews.length) {
+                reviewList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.6);">
+                        No reviews found.
+                    </div>
+                `;
+                return;
+            }
+
+            reviewList.innerHTML = reviews
+                .map(
+                    (review) => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                ${review.reviewer_name?.charAt(0) || "A"}
+                            </div>
+                            <div class="reviewer-meta">
+                                <div class="reviewer-name">${
+                                    review.reviewer_name || "Anonymous"
+                                }</div>
+                                <div class="rating-stars">
+                                    ${getStarRating(review.rating)}
+                                </div>
+                                <div class="review-date">
+                                    ${formatDate(review.created_at)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        ${review.comment}
+                    </div>
+                </div>
+            `
+                )
+                .join("");
+        }
+
+        function getStarRating(rating) {
+            return Array.from({ length: 5 }, (_, i) =>
+                i < rating
+                    ? '<i class="fas fa-star"></i>'
+                    : '<i class="far fa-star"></i>'
+            ).join("");
+        }
+
+        function updatePagination(total) {
+            const prevBtn = document.getElementById("prevPage");
+            const nextBtn = document.getElementById("nextPage");
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage * PAGE_SIZE >= total;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: "numeric", month: "long", day: "numeric" };
+            return new Date(dateString).toLocaleDateString("en-US", options);
+        }
+
+        function showReviewForm() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login?redirect=' + window.location.pathname;
+                return;
+            }
+            document.getElementById('reviewForm').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideReviewForm() {
+            document.getElementById('reviewForm').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        async function submitReview(event) {
+            event.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const comment = document.getElementById('reviewText').value;
+            const lawyerId = window.location.pathname.split('/')[2];
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/lawyers/${lawyerId}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        rating: parseInt(rating),
+                        comment: comment
+                    })
+                });
+
+                if (response.ok) {
+                    hideReviewForm();
+                    window.location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Error submitting review');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the review');
+            }
+        }
+
+
+        function generateStarRating(rating = 0) {
+    return `
+        <div class="stars" data-rating="${rating}">
+            <i class="fas fa-star" data-value="1"></i>
+            <i class="fas fa-star" data-value="2"></i>
+            <i class="fas fa-star" data-value="3"></i>
+            <i class="fas fa-star" data-value="4"></i>
+            <i class="fas fa-star" data-value="5"></i>
+        </div>
+    `;
+}
+
+    function updateStarDisplay(container, rating) {
+    const stars = container.querySelectorAll('.fa-star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.add('active');
+            star.style.color = '#ffd700';
+        } else {
+            star.classList.remove('active');
+            star.style.color = 'rgba(255, 255, 255, 0.3)';
+        }
+    });
+}
+
+    function highlightStarsTemp(stars, rating) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute('data-value'));
+            if (value <= rating) {
+                star.style.color = '#ffd700'; // Gold color
+            } else {
+                star.style.color = 'rgba(255, 255, 255, 0.3)'; // Default color
+            }
+        });
+    }
+
+    function setupStarRating() {
+    const starsContainers = document.querySelectorAll('.stars');
+
+    starsContainers.forEach(container => {
+        const stars = Array.from(container.querySelectorAll('.fa-star'));
+        let currentRating = parseInt(container.getAttribute('data-rating')) || 0;
+
+        // Initial setup
+        updateStarDisplay(container, currentRating);
+
+        stars.forEach((star, index) => {
+            // Click handling
+            star.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentRating = index + 1;
+                container.setAttribute('data-rating', currentRating);
+                updateStarDisplay(container, currentRating);
+            });
+
+            // Hover handling
+            star.addEventListener('mouseenter', () => {
+                // Highlight all stars up to and including the current one
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.style.color = '#ffd700';
+                    } else {
+                        s.style.color = 'rgba(255, 255, 255, 0.3)';
+                    }
+                });
+            });
+        });
+
+        // Handle container mouse leave
+        container.addEventListener('mouseleave', () => {
+            updateStarDisplay(container, currentRating);
+        });
+    });
+}
+
+async function submitReview(event) {
+    event.preventDefault();
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    const starsContainer = event.target.querySelector('.stars');
+    const rating = starsContainer.getAttribute('data-rating');
+    
+    if (!rating || rating === "0") {
+        showNotification('Please select a rating', 'error');
+        return;
+    }
+
+    const comment = document.getElementById('reviewText').value;
+    const lawyerId = window.location.pathname.split('/')[2];
+
+    try {
+        const response = await fetch(`/api/lawyers/${lawyerId}/reviews`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                rating: parseInt(rating),
+                comment: comment
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            hideReviewForm();
+            showNotification('Review submitted successfully!');
+            // Reload the page after a short delay to show the notification
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } else {
+            showNotification(data.message || 'Error submitting review', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('An error occurred while submitting the review', 'error');
+    }
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setupStarRating();
+});
+
+    function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    
+    // Set icon based on type
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    
+    notification.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span class="message">${message}</span>
+        <button class="close-btn" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Add to document
+    document.body.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, 5000);
+}
+    </script>
+</body>
+</html>

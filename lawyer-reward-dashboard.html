@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LawyerHub - Lawyer Reward Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+:root {
+  --primary-color: #1a1c20;
+  --secondary-color: #00ffcc;
+  --accent-color: #ff4444;
+  --light-bg: rgba(255, 255, 255, 0.05);
+  --dark-text: #fff;
+  --light-text: rgba(255, 255, 255, 0.8);
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --gold-color: #f1c40f;
+  --silver-color: #bdc3c7;
+  --bronze-color: #cd7f32;
+  --platinum-color: #e5e4e2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1c20 0%, #0f1013 100%);
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+
+header {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  color: var(--dark-text);
+}
+
+.logo i {
+  margin-right: 0.5rem;
+  color: var(--secondary-color);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin-left: 1.5rem;
+}
+
+nav ul li a {
+  color: var(--light-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+  padding: 0.5rem;
+}
+
+nav ul li a:hover {
+  color: var(--secondary-color);
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  outline: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #00ffcc, #3399ff);
+  color: #000;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+}
+
+.btn-outline:hover {
+  background: var(--secondary-color);
+  color: #000;
+}
+
+.dashboard-header {
+  padding: 2rem 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--platinum-color);
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark-text);
+}
+
+.profile-info .specialty {
+  font-size: 1.1rem;
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--light-text);
+}
+
+.stat-item .icon {
+  color: var(--secondary-color);
+}
+
+.tier-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--badge-text);
+  font-weight: 600;
+  margin-right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(45deg, var(--badge-color-1), var(--badge-color-2));
+}
+
+.tier-platinum {
+  --badge-color-1: #e5e4e2;
+  --badge-color-2: #b4b4b4;
+  --badge-text: #000;
+}
+
+.tier-gold {
+  --badge-color-1: #ffd700;
+  --badge-color-2: #ffa500;
+  --badge-text: #000;
+}
+
+.tier-silver {
+  --badge-color-1: #c0c0c0;
+  --badge-color-2: #a9a9a9;
+  --badge-text: #000;
+}
+
+.tier-standard {
+  --badge-color-1: #4a4a4a;
+  --badge-color-2: #2d2d2d;
+  --badge-text: #fff;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title i {
+  color: var(--secondary-color);
+}
+
+.progress-circle {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 2rem;
+  position: relative;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.progress-ring-circle {
+  stroke-dasharray: 283;
+  transition: stroke-dashoffset 0.5s;
+  stroke: var(--secondary-color);
+  stroke-width: 10;
+  fill: transparent;
+}
+
+.progress-ring-bg {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 10;
+  fill: transparent;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-text .value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dark-text);
+}
+
+.progress-text .label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tier-progress {
+  text-align: center;
+}
+
+.tier-progress-bar {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.tier-progress-fill {
+  height: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 2px;
+  position: relative;
+}
+
+.tier-marker {
+  position: absolute;
+  top: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  transform: translateX(-50%);
+}
+
+.tier-marker.active {
+  border-color: var(--secondary-color);
+}
+
+.tier-marker.current {
+  border-color: var(--success-color);
+  background-color: var(--success-color);
+}
+
+.tier-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 0 10px;
+}
+
+.tier-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  width: 25%;
+  text-align: center;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.badge-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.badge-icon i {
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+}
+
+.badge-name {
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 0.3rem;
+}
+
+.badge-description {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.recent-activity {
+  grid-column: 1 / -1;
+}
+
+.activity-item {
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.activity-icon.review {
+  color: var(--secondary-color);
+}
+
+.activity-icon.badge {
+  color: var(--warning-color);
+}
+
+.activity-icon.tier {
+  color: var(--accent-color);
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 500;
+  color: var(--dark-text);
+}
+
+.activity-description {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.reward-benefits {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.benefit-item:last-child {
+  margin-bottom: 0;
+}
+
+.benefit-icon {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color);
+}
+
+.benefit-info h4 {
+  color: var(--dark-text);
+  margin-bottom: 0.5rem;
+}
+
+.benefit-info p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.recent-reviews {
+  grid-column: 1 / -1;
+}
+
+.review-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.filter-btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.filter-btn.active {
+  background: var(--secondary-color);
+  color: #000;
+  border-color: var(--secondary-color);
+}
+
+.reviews-list {
+  margin-top: 1.5rem;
+}
+
+.review-item {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+.reviewer-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: var(--dark-text);
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.review-rating {
+  color: var(--warning-color);
+  font-size: 0.9rem;
+}
+
+.review-content {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.loading-spinner {
+  display: none;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-spinner::after {
+  content: "";
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--secondary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--secondary-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+.page-btn:not(:disabled):hover {
+  background: var(--secondary-color);
+  color: #000;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+
+  nav ul {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo"><i class="fas fa-balance-scale"></i> LawyerHub</div>
+          <nav>
+            <ul>
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Reviews</a></li>
+              <li><a href="#">Messages</a></li>
+              <li><a href="#">Consultations</a></li>
+            </ul>
+            <button class="mobile-menu-btn">
+              <i class="fas fa-bars"></i>
+            </button>
+          </nav>
+          <div class="user-menu">
+            <a href="#" class="btn btn-outline">Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="dashboard-header">
+      <div class="container">
+        <div class="profile-summary">
+          <div class="profile-image">
+            <img
+              src="/static/images/placeholder.jpeg"
+              alt="Lawyer profile image"
+            />
+          </div>
+          <div class="profile-info">
+            <h1>Sarah Johnson</h1>
+            <p class="specialty">Family Law</p>
+            <div>
+              <span class="tier-badge tier-platinum">
+                <i class="fas fa-crown"></i> Platinum
+              </span>
+            </div>
+            <div class="stats">
+              <div class="stat-item">
+                <div class="icon">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div><strong>4.8</strong> Rating</div>
+              </div>
+              <div class="stat-item">
+                <div class="icon">
+                  <i class="fas fa-comment"></i>
+                </div>
+                <div><strong>156</strong> Reviews</div>
+              </div>
+              <div class="stat-item">
+                <div class="icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div><strong>720</strong> Points</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="dashboard-content">
+        <div class="main-content">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-chart-line"></i> Reward Progress
+              </h3>
+            </div>
+            <div class="progress-circle">
+              <svg class="progress-ring" width="180" height="180">
+                <circle
+                  class="progress-ring-bg"
+                  cx="90"
+                  cy="90"
+                  r="80"
+                ></circle>
+                <circle
+                  class="progress-ring-circle"
+                  cx="90"
+                  cy="90"
+                  r="80"
+                  stroke-dashoffset="30"
+                ></circle>
+              </svg>
+              <div class="progress-text">
+                <div class="value">720</div>
+                <div class="label">reward points</div>
+              </div>
+            </div>
+            <div class="tier-progress">
+              <div class="tier-progress-bar">
+                <div class="tier-progress-fill" style="width: 90%"></div>
+                <div class="tier-marker active" style="left: 0%"></div>
+                <div class="tier-marker active" style="left: 33%"></div>
+                <div class="tier-marker active" style="left: 66%"></div>
+                <div class="tier-marker current" style="left: 90%"></div>
+              </div>
+              <div class="tier-labels">
+                <div class="tier-label">Standard</div>
+                <div class="tier-label">Silver</div>
+                <div class="tier-label">Gold</div>
+                <div class="tier-label">Platinum</div>
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem">
+              <a href="#" class="btn btn-outline">View Reward Details</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-award"></i> Earned Badges
+              </h3>
+            </div>
+            <div class="badges-grid">
+              <div class="badge-item">
+                <div class="badge-icon">
+                  <i class="fas fa-star"></i>
+                </div>
+                <h4 class="badge-name">Top Rated</h4>
+                <p class="badge-description">
+                  Consistently high ratings from clients
+                </p>
+              </div>
+              <div class="badge-item">
+                <div class="badge-icon">
+                  <i class="fas fa-heart"></i>
+                </div>
+                <h4 class="badge-name">Client Favorite</h4>
+                <p class="badge-description">
+                  High satisfaction from 20+ clients
+                </p>
+              </div>
+              <div class="badge-item">
+                <div class="badge-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <h4 class="badge-name">Experienced Pro</h4>
+                <p class="badge-description">Served 30+ clients successfully</p>
+              </div>
+              <div class="badge-item">
+                <div class="badge-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <h4 class="badge-name">Perfect Score</h4>
+                <p class="badge-description">Multiple 5-star reviews</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card recent-activity">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-history"></i> Recent Activity
+              </h3>
+            </div>
+
+            <!-- Add this after the recent activity card -->
+            <div class="card recent-reviews">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-comments"></i> Recent Reviews
+                </h3>
+                <div class="review-filters">
+                  <button class="filter-btn active" data-rating="all">
+                    All
+                  </button>
+                  <button class="filter-btn" data-rating="5">5 ★</button>
+                  <button class="filter-btn" data-rating="4">4 ★</button>
+                  <button class="filter-btn" data-rating="3">3 ★</button>
+                  <button class="filter-btn" data-rating="2">2 ★</button>
+                  <button class="filter-btn" data-rating="1">1 ★</button>
+                </div>
+              </div>
+              <div class="loading-spinner"></div>
+              <div class="reviews-list"></div>
+              <div class="pagination">
+                <button class="page-btn" id="prevReviewPage" disabled>
+                  Previous
+                </button>
+                <button class="page-btn" id="nextReviewPage" disabled>
+                  Next
+                </button>
+              </div>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon review">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="activity-info">
+                  <h4 class="activity-title">New 5-star Review</h4>
+                  <p class="activity-description">
+                    You received a new 5-star review from John D.
+                  </p>
+                </div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon badge">
+                  <i class="fas fa-award"></i>
+                </div>
+                <div class="activity-info">
+                  <h4 class="activity-title">Badge Earned</h4>
+                  <p class="activity-description">
+                    You earned the 'Client Favorite' badge!
+                  </p>
+                </div>
+                <div class="activity-time">1 week ago</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon tier">
+                  <i class="fas fa-crown"></i>
+                </div>
+                <div class="activity-info">
+                  <h4 class="activity-title">Tier Upgrade</h4>
+                  <p class="activity-description">
+                    Congratulations! You've been promoted to Platinum tier.
+                  </p>
+                </div>
+                <div class="activity-time">2 weeks ago</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon review">
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="activity-info">
+                  <h4 class="activity-title">New 4-star Review</h4>
+                  <p class="activity-description">
+                    You received a new 4-star review from Emily T.
+                  </p>
+                </div>
+                <div class="activity-time">3 weeks ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-gem"></i> Tier Benefits
+              </h3>
+            </div>
+            <div class="reward-benefits">
+              <div class="benefit-item">
+                <div class="benefit-icon">
+                  <i class="fas fa-search"></i>
+                </div>
+                <div class="benefit-info">
+                  <h4>Enhanced Visibility</h4>
+                  <p>
+                    Priority placement in search results for potential clients
+                  </p>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">
+                  <i class="fas fa-tag"></i>
+                </div>
+                <div class="benefit-info">
+                  <h4>Platinum Badge</h4>
+                  <p>Exclusive badge displayed on your profile</p>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">
+                  <i class="fas fa-percentage"></i>
+                </div>
+                <div class="benefit-info">
+                  <h4>Reduced Platform Fee</h4>
+                  <p>Only 10% platform fee (Standard: 20%)</p>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">
+                  <i class="fas fa-ad"></i>
+                </div>
+                <div class="benefit-info">
+                  <h4>Featured Listing</h4>
+                  <p>Your profile is featured in the homepage rotation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-lightbulb"></i> Tips to Improve
+              </h3>
+            </div>
+            <ul style="padding-left: 1.5rem">
+              <li style="margin-bottom: 1rem">
+                <strong>Respond quickly</strong> to client inquiries to improve
+                engagement metrics
+              </li>
+              <li style="margin-bottom: 1rem">
+                <strong>Ask satisfied clients</strong> to leave reviews after
+                successful cases
+              </li>
+              <li style="margin-bottom: 1rem">
+                <strong>Complete your profile</strong> with detailed expertise
+                and case results
+              </li>
+              <li>
+                <strong>Share knowledge</strong> through LawyerHub's Q&A forum
+                to build authority
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set circle progress based on reward points
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get token from localStorage
+        const token = localStorage.getItem("token");
+
+        // Redirect to login if no token is found
+        if (!token) {
+          window.location.href = "/login";
+          return;
+        }
+
+        // Fetch dashboard data
+        fetchDashboardData(token);
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+        const navMenu = document.querySelector("nav ul");
+
+        if (mobileMenuBtn) {
+          mobileMenuBtn.addEventListener("click", function () {
+            navMenu.style.display =
+              navMenu.style.display === "flex" ? "none" : "flex";
+          });
+        }
+
+        // Logout functionality
+        const logoutBtn = document.querySelector(".user-menu .btn-outline");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "/login";
+          });
+        }
+      });
+
+      async function fetchDashboardData(token) {
+        try {
+          const response = await fetch("/api/dashboard", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            // If the token is invalid or expired, redirect to login
+            if (response.status === 401) {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              window.location.href = "/login";
+              return;
+            }
+
+            throw new Error("Failed to fetch dashboard data");
+          }
+
+          const data = await response.json();
+          updateDashboard(data);
+        } catch (error) {
+          console.error("Error:", error);
+          showErrorMessage(
+            "Failed to load dashboard data. Please refresh the page or try again later."
+          );
+        }
+      }
+
+      function updateDashboard(data) {
+        const lawyer = data.lawyer;
+        const activities = data.recent_activities;
+        const benefits = data.tier_benefits;
+
+        // Update profile information
+        document.querySelector(".profile-info h1").textContent = lawyer.name;
+        document.querySelector(".profile-info .specialty").textContent =
+          lawyer.specialty.join(", ");
+
+        // Update tier badge
+        const tierBadge = document.querySelector(".tier-badge");
+        tierBadge.className = `tier-badge tier-${lawyer.reward_tier}`;
+        tierBadge.innerHTML = `<i class="fas fa-crown"></i> ${capitalizeFirstLetter(
+          lawyer.reward_tier
+        )}`;
+
+        // Update stats
+        document.querySelector(".stat-item:nth-child(1) strong").textContent =
+          lawyer.rating || "0.0";
+        document.querySelector(".stat-item:nth-child(2) strong").textContent =
+          lawyer.review_count || "0";
+        document.querySelector(".stat-item:nth-child(3) strong").textContent =
+          lawyer.reward_points || "0";
+
+        // Update reward progress
+        updateProgressCircle(lawyer.reward_points);
+        updateTierProgressBar(lawyer.reward_tier, lawyer.reward_points);
+
+        // Update badges
+        updateBadges(lawyer.badges || []);
+
+        // Update recent activity
+        updateRecentActivity(activities);
+
+        // Update tier benefits
+        updateTierBenefits(benefits);
+      }
+
+      function updateProgressCircle(points) {
+        const circle = document.querySelector(".progress-ring-circle");
+        const pointsDisplay = document.querySelector(".progress-text .value");
+
+        pointsDisplay.textContent = points;
+
+        // Calculate max points needed for current tier
+        let maxPoints = 800; // Default for platinum
+        if (points < 150) {
+          maxPoints = 150; // Standard to Silver
+        } else if (points < 300) {
+          maxPoints = 300; // Silver to Gold
+        } else if (points < 500) {
+          maxPoints = 500; // Gold to Platinum
+        }
+
+        // Calculate progress percentage
+        const progress = Math.min(1, points / maxPoints);
+
+        // Update circle
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        const offset = circumference - progress * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
+
+      function updateTierProgressBar(currentTier, points) {
+        const tierMarkers = document.querySelectorAll(".tier-marker");
+        const progressFill = document.querySelector(".tier-progress-fill");
+
+        // Reset all markers
+        tierMarkers.forEach((marker) => {
+          marker.classList.remove("active", "current");
+        });
+
+        // Set progress percentage based on tier and points
+        let progressPercentage = 0;
+
+        switch (currentTier) {
+          case "standard":
+            progressPercentage = (points / 150) * 33;
+            break;
+          case "silver":
+            progressPercentage = 33 + ((points - 150) / 150) * 33;
+            break;
+          case "gold":
+            progressPercentage = 66 + ((points - 300) / 200) * 34;
+            break;
+          case "platinum":
+            progressPercentage = 100;
+            break;
+        }
+
+        // Update progress bar
+        progressFill.style.width = `${progressPercentage}%`;
+
+        // Update markers
+        let tierIndex = ["standard", "silver", "gold", "platinum"].indexOf(
+          currentTier
+        );
+
+        for (let i = 0; i < tierMarkers.length; i++) {
+          if (i < tierIndex) {
+            tierMarkers[i].classList.add("active");
+          } else if (i === tierIndex) {
+            tierMarkers[i].classList.add("current");
+          }
+        }
+      }
+
+      function updateBadges(badges) {
+        const badgesGrid = document.querySelector(".badges-grid");
+        badgesGrid.innerHTML = "";
+
+        if (badges.length === 0) {
+          badgesGrid.innerHTML =
+            "<p>You haven't earned any badges yet. Keep improving your performance to earn badges!</p>";
+          return;
+        }
+
+        const badgeIcons = {
+          "Top Rated": "fa-star",
+          "Client Favorite": "fa-heart",
+          "Rising Star": "fa-rocket",
+          "Experienced Pro": "fa-users",
+          "Perfect Score": "fa-check-circle",
+          "Quick Responder": "fa-bolt",
+          "Case Winner": "fa-trophy",
+          "Top 10%": "fa-award",
+        };
+
+        const badgeDescriptions = {
+          "Top Rated": "Consistently high ratings from clients",
+          "Client Favorite": "High satisfaction from 20+ clients",
+          "Rising Star": "Excellent performance as a newer lawyer",
+          "Experienced Pro": "Served 30+ clients successfully",
+          "Perfect Score": "Multiple 5-star reviews",
+          "Quick Responder": "Responds to inquiries within 4 hours",
+          "Case Winner": "High success rate in cases",
+          "Top 10%": "Among the top 10% of lawyers on the platform",
+        };
+
+        badges.forEach((badge) => {
+          const badgeHTML = `
+            <div class="badge-item">
+                <div class="badge-icon">
+                    <i class="fas ${badgeIcons[badge] || "fa-certificate"}"></i>
+                </div>
+                <h4 class="badge-name">${badge}</h4>
+                <p class="badge-description">${
+                  badgeDescriptions[badge] ||
+                  "Recognition for excellent performance"
+                }</p>
+            </div>
+        `;
+          badgesGrid.innerHTML += badgeHTML;
+        });
+      }
+
+      function updateRecentActivity(activities) {
+        const activityList = document.querySelector(".activity-list");
+
+        if (!activities || activities.length === 0) {
+          activityList.innerHTML = "<p>No recent activity to display.</p>";
+          return;
+        }
+
+        activityList.innerHTML = "";
+
+        const activityIcons = {
+          review: "fa-star",
+          tier_change: "fa-crown",
+          badge_earned: "fa-award",
+          points_earned: "fa-plus-circle",
+        };
+
+        activities.forEach((activity) => {
+          const eventType = activity.event_type || "review";
+          const timeAgo = formatTimeAgo(new Date(activity.created_at));
+
+          const activityHTML = `
+            <div class="activity-item">
+                <div class="activity-icon ${eventType}">
+                    <i class="fas ${activityIcons[eventType]}"></i>
+                </div>
+                <div class="activity-info">
+                    <h4 class="activity-title">${formatActivityTitle(
+                      activity
+                    )}</h4>
+                    <p class="activity-description">${
+                      activity.description || "Activity recorded"
+                    }</p>
+                </div>
+                <div class="activity-time">
+                    ${timeAgo}
+                </div>
+            </div>
+        `;
+
+          activityList.innerHTML += activityHTML;
+        });
+      }
+
+      function formatActivityTitle(activity) {
+        switch (activity.event_type) {
+          case "review":
+            return `New ${activity.rating}-star Review`;
+          case "tier_change":
+            return "Tier Upgrade";
+          case "badge_earned":
+            return "Badge Earned";
+          case "points_earned":
+            return "Points Earned";
+          default:
+            return "Activity";
+        }
+      }
+
+      function updateTierBenefits(benefits) {
+        document.querySelector(".benefit-item:nth-child(1) h4").textContent =
+          "Enhanced Visibility";
+        document.querySelector(
+          ".benefit-item:nth-child(1) p"
+        ).textContent = `${benefits.visibility} placement in search results for potential clients`;
+
+        document.querySelector(
+          ".benefit-item:nth-child(2) h4"
+        ).textContent = `${capitalizeFirstLetter(benefits.platform_fee)} Badge`;
+        document.querySelector(".benefit-item:nth-child(2) p").textContent =
+          benefits.badge
+            ? "Exclusive badge displayed on your profile"
+            : "No badge for this tier";
+
+        document.querySelector(".benefit-item:nth-child(3) h4").textContent =
+          "Platform Fee";
+        document.querySelector(
+          ".benefit-item:nth-child(3) p"
+        ).textContent = `Only ${benefits.platform_fee} platform fee (Standard: 20%)`;
+
+        document.querySelector(".benefit-item:nth-child(4) h4").textContent =
+          "Featured Listing";
+        document.querySelector(".benefit-item:nth-child(4) p").textContent =
+          benefits.featured
+            ? "Your profile is featured in the homepage rotation"
+            : "Feature not available for this tier";
+      }
+
+      function formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.round(diffMs / 1000);
+        const diffMin = Math.round(diffSec / 60);
+        const diffHour = Math.round(diffMin / 60);
+        const diffDay = Math.round(diffHour / 24);
+
+        if (diffSec < 60) {
+          return "just now";
+        } else if (diffMin < 60) {
+          return `${diffMin} minute${diffMin > 1 ? "s" : ""} ago`;
+        } else if (diffHour < 24) {
+          return `${diffHour} hour${diffHour > 1 ? "s" : ""} ago`;
+        } else if (diffDay < 7) {
+          return `${diffDay} day${diffDay > 1 ? "s" : ""} ago`;
+        } else {
+          const options = { year: "numeric", month: "short", day: "numeric" };
+          return date.toLocaleDateString(undefined, options);
+        }
+      }
+
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+
+      function showErrorMessage(message) {
+        // Create error message element
+        const errorDiv = document.createElement("div");
+        errorDiv.style.backgroundColor = "#e74c3c";
+        errorDiv.style.color = "white";
+        errorDiv.style.padding = "1rem";
+        errorDiv.style.borderRadius = "4px";
+        errorDiv.style.margin = "1rem auto";
+        errorDiv.style.maxWidth = "800px";
+        errorDiv.style.textAlign = "center";
+        errorDiv.textContent = message;
+
+        // Insert at top of container
+        const container = document.querySelector(".container");
+        container.insertBefore(errorDiv, container.firstChild);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          errorDiv.remove();
+        }, 5000);
+      }
+
+      // Reviews handling
+      let reviewsCurrentPage = 1;
+      let reviewsCurrentFilter = "all";
+      const REVIEWS_PER_PAGE = 5;
+
+      function initializeReviews() {
+        loadDashboardReviews();
+        setupReviewFilterListeners();
+        setupReviewPaginationListeners();
+      }
+
+      function setupReviewFilterListeners() {
+        const filterButtons = document.querySelectorAll(
+          ".review-filters .filter-btn"
+        );
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+            reviewsCurrentFilter = button.dataset.rating;
+            reviewsCurrentPage = 1;
+            loadDashboardReviews();
+          });
+        });
+      }
+
+      function setupReviewPaginationListeners() {
+        document
+          .getElementById("prevReviewPage")
+          .addEventListener("click", () => {
+            if (reviewsCurrentPage > 1) {
+              reviewsCurrentPage--;
+              loadDashboardReviews();
+            }
+          });
+
+        document
+          .getElementById("nextReviewPage")
+          .addEventListener("click", () => {
+            reviewsCurrentPage++;
+            loadDashboardReviews();
+          });
+      }
+
+      async function loadDashboardReviews() {
+        const reviewsList = document.querySelector(".reviews-list");
+        const loadingSpinner = document.querySelector(".loading-spinner");
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          return;
+        }
+
+        try {
+          reviewsList.style.display = "none";
+          loadingSpinner.style.display = "flex";
+
+          const response = await fetch(
+            `/api/lawyers/${getCurrentUserId()}/reviews?` +
+              `page=${reviewsCurrentPage}&per_page=${REVIEWS_PER_PAGE}` +
+              (reviewsCurrentFilter !== "all"
+                ? `&rating=${reviewsCurrentFilter}`
+                : ""),
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) throw new Error("Failed to fetch reviews");
+
+          const data = await response.json();
+          renderDashboardReviews(data.reviews);
+          updateReviewPagination(data.total);
+        } catch (error) {
+          reviewsList.innerHTML = `
+            <div class="error-message">
+                Failed to load reviews. Please try again later.
+            </div>
+        `;
+        } finally {
+          loadingSpinner.style.display = "none";
+          reviewsList.style.display = "block";
+        }
+      }
+
+      function renderDashboardReviews(reviews) {
+        const reviewsList = document.querySelector(".reviews-list");
+
+        if (!reviews.length) {
+          reviewsList.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #64748b;">
+                No reviews found.
+            </div>
+        `;
+          return;
+        }
+
+        reviewsList.innerHTML = reviews
+          .map(
+            (review) => `
+        <div class="review-item">
+            <div class="review-header">
+                <div class="reviewer-info">
+                    <div class="reviewer-avatar">
+                        ${review.reviewer_name?.charAt(0) || "A"}
+                    </div>
+                    <div class="reviewer-details">
+                        <div class="reviewer-name">${
+                          review.reviewer_name || "Anonymous"
+                        }</div>
+                        <div class="review-date">${formatDate(
+                          review.created_at
+                        )}</div>
+                    </div>
+                </div>
+                <div class="review-rating">
+                    ${getStarRating(review.rating)}
+                </div>
+            </div>
+            <div class="review-content">
+                ${review.comment}
+            </div>
+        </div>
+    `
+          )
+          .join("");
+      }
+
+      function updateReviewPagination(total) {
+        const prevBtn = document.getElementById("prevReviewPage");
+        const nextBtn = document.getElementById("nextReviewPage");
+
+        prevBtn.disabled = reviewsCurrentPage === 1;
+        nextBtn.disabled = reviewsCurrentPage * REVIEWS_PER_PAGE >= total;
+      }
+
+      function getStarRating(rating) {
+        return Array.from({ length: 5 }, (_, i) =>
+          i < rating
+            ? '<i class="fas fa-star"></i>'
+            : '<i class="far fa-star"></i>'
+        ).join("");
+      }
+
+      function getCurrentUserId() {
+        const token = localStorage.getItem("token");
+        if (!token) return null;
+
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          return payload.user_id;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      // Add this to your existing DOMContentLoaded event listener
+      document.addEventListener("DOMContentLoaded", function () {
+        // ... existing initialization code ...
+        initializeReviews();
+      });
+    </script>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

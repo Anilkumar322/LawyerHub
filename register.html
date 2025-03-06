@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LawyerHub - Register</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #1a1c20;
+        --secondary-color: #00ffcc;
+        --accent-color: #3399ff;
+        --light-bg: #0f1013;
+        --dark-text: #ffffff;
+        --light-text: #ffffff;
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --input-border: rgba(255, 255, 255, 0.1);
+        --input-focus-border: #00ffcc;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+        --footer-bg: rgba(255, 255, 255, 0.05);
+        --footer-border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a1c20 0%, #0f1013 100%);
+        color: var(--dark-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 1rem 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--footer-border);
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--light-text);
+      }
+
+      .logo i {
+        margin-right: 0.5rem;
+        background: linear-gradient(45deg, #00ffcc, #3399ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .register-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px 40px;
+      }
+
+      .register-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--input-border);
+        width: 100%;
+        max-width: 800px;
+        padding: 40px;
+      }
+
+      .register-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .register-header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #00ffcc, #3399ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glow 3s ease-in-out infinite alternate;
+      }
+
+      .register-header p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1em;
+      }
+
+      .register-tabs {
+        display: flex;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        cursor: pointer;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .tab.active {
+        color: var(--secondary-color);
+      }
+
+      .tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--secondary-color);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+      .input-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .input-group.full-width {
+        grid-column: 1 / 3;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+      }
+
+      .input-field {
+        position: relative;
+      }
+
+      .input-field input,
+      .input-field select {
+        width: 100%;
+        padding: 0.8rem 1rem 0.8rem 2.5rem;
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 50px;
+        color: var(--light-text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .input-field input:focus,
+      .input-field select:focus {
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        outline: none;
+      }
+
+      .input-field i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .terms {
+        margin: 1.5rem 0;
+        display: flex;
+        align-items: flex-start;
+      }
+
+      .terms input {
+        margin-right: 0.75rem;
+        margin-top: 0.25rem;
+      }
+
+      .terms label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      .terms a {
+        color: var(--secondary-color);
+        text-decoration: none;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      .login-link a {
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .login-link a:hover {
+        color: #3399ff;
+      }
+
+      .btn {
+        padding: 0.8rem 1.2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        outline: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #00ffcc, #3399ff);
+        color: #000;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+      }
+
+      .divider {
+        margin: 2rem 0;
+        position: relative;
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      footer {
+        background: var(--footer-bg);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--footer-border);
+        padding: 40px 20px 20px;
+        margin-top: auto;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .copyright {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        margin-left: 1.5rem;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .footer-links a:hover {
+        color: #00ffcc;
+      }
+
+      @media (max-width: 768px) {
+        .footer-content {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .footer-links a {
+          margin: 0 0.75rem;
+        }
+      }
+
+      @keyframes glow {
+        0% {
+          text-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+        100% {
+          text-shadow: 0 0 20px rgba(0, 255, 204, 0.4),
+            0 0 30px rgba(0, 255, 204, 0.2);
+        }
+      }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: -100%;
+        background: linear-gradient(45deg, #00ffcc, #3399ff);
+        color: #000;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1001;
+        transition: right 0.5s ease-in-out;
+      }
+
+      .notification.show {
+        right: 20px;
+      }
+
+      .notification i {
+        font-size: 1.2em;
+      }
+
+      .notification-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .notification-title {
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .notification-message {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <a href="/" class="logo">
+            <i class="fas fa-balance-scale"></i> LawyerHub
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="register-container">
+      <div class="register-card">
+        <div class="register-header">
+          <h1>Create an Account</h1>
+          <p>Join LawyerHub and connect with legal professionals</p>
+        </div>
+
+        <div class="register-tabs">
+          <div class="tab active" id="client-tab">I'm looking for a lawyer</div>
+          <div class="tab" id="lawyer-tab">I'm a lawyer</div>
+        </div>
+
+        <form id="register-form">
+          <input type="hidden" id="role" name="role" value="client" />
+
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="name">Full Name</label>
+              <div class="input-field">
+                <i class="fas fa-user"></i>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your full name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="email">Email</label>
+              <div class="input-field">
+                <i class="fas fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Your email address"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="password">Password</label>
+              <div class="input-field">
+                <i class="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Create a password"
+                  required
+                  minlength="8"
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="confirm-password">Confirm Password</label>
+              <div class="input-field">
+                <i class="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                  placeholder="Confirm your password"
+                  required
+                  minlength="8"
+                />
+              </div>
+            </div>
+
+            <!-- Lawyer-specific fields (hidden by default) -->
+            <div class="lawyer-fields" style="display: none">
+              <div class="input-group">
+                <label for="specialty">Primary Specialty</label>
+                <div class="input-field">
+                  <i class="fas fa-briefcase"></i>
+                  <select id="specialty" name="specialty">
+                    <option value="">Select specialty</option>
+                    <option value="Corporate Law">Corporate Law</option>
+                    <option value="Family Law">Family Law</option>
+                    <option value="Criminal Law">Criminal Law</option>
+                    <option value="Real Estate Law">Real Estate Law</option>
+                    <option value="Immigration Law">Immigration Law</option>
+                    <option value="Intellectual Property">
+                      Intellectual Property
+                    </option>
+                    <option value="Personal Injury">Personal Injury</option>
+                    <option value="Employment Law">Employment Law</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="license">License Number</label>
+                <div class="input-field">
+                  <i class="fas fa-id-card"></i>
+                  <input
+                    type="text"
+                    id="license"
+                    name="license"
+                    placeholder="Your license number"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="terms">
+            <input type="checkbox" id="terms" name="terms" required />
+            <label for="terms">
+              I agree to the <a href="#">Terms of Service</a> and
+              <a href="#">Privacy Policy</a>. I understand that LawyerHub will
+              process my data as described in the Privacy Policy.
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <div class="login-link">
+          Already have an account? <a href="/login">Sign in</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="copyright">
+            &copy; 2025 LawyerHub. All rights reserved.
+          </div>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Help Center</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const clientTab = document.getElementById("client-tab");
+        const lawyerTab = document.getElementById("lawyer-tab");
+        const roleInput = document.getElementById("role");
+        const lawyerFields = document.querySelector(".lawyer-fields");
+
+        // Tab switching
+        clientTab.addEventListener("click", function () {
+          clientTab.classList.add("active");
+          lawyerTab.classList.remove("active");
+          roleInput.value = "client";
+          lawyerFields.style.display = "none";
+        });
+
+        lawyerTab.addEventListener("click", function () {
+          lawyerTab.classList.add("active");
+          clientTab.classList.remove("active");
+          roleInput.value = "lawyer";
+          lawyerFields.style.display = "block";
+        });
+
+        // Form submission
+        // Form submission
+        document
+          .getElementById("register-form")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // Password validation
+            const password = document.getElementById("password").value;
+            const confirmPassword =
+              document.getElementById("confirm-password").value;
+
+            if (password !== confirmPassword) {
+              showNotification("Error", "Passwords do not match", "error");
+              return;
+            }
+
+            // Prepare registration data
+            const formData = {
+              name: document.getElementById("name").value,
+              email: document.getElementById("email").value,
+              password: password,
+              role: roleInput.value,
+            };
+
+            // Add lawyer-specific fields if applicable
+            if (roleInput.value === "lawyer") {
+              formData.specialty = [document.getElementById("specialty").value];
+              formData.license_info = {
+                license_number: document.getElementById("license").value,
+              };
+            }
+
+            try {
+              const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                showNotification(
+                  "Success!",
+                  "Registration successful! Redirecting to login...",
+                  "success"
+                );
+                setTimeout(() => {
+                  window.location.href = "/login";
+                }, 2000);
+              } else {
+                showNotification(
+                  "Error",
+                  data.message || "Registration failed",
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showNotification(
+                "Error",
+                "An error occurred. Please try again.",
+                "error"
+              );
+            }
+          });
+
+        // Add the notification function
+        function showNotification(title, message, type = "success") {
+          // Remove any existing notification
+          const existingNotification = document.querySelector(".notification");
+          if (existingNotification) {
+            existingNotification.remove();
+          }
+
+          // Create notification element
+          const notification = document.createElement("div");
+          notification.className = "notification";
+
+          // Set icon based on type
+          const icon =
+            type === "success" ? "check-circle" : "exclamation-circle";
+          const color = type === "success" ? "#000" : "#721c24";
+          const bgColor =
+            type === "success"
+              ? "linear-gradient(45deg, #00ffcc, #3399ff)"
+              : "linear-gradient(45deg, #ff6b6b, #ff8585)";
+
+          notification.style.background = bgColor;
+          notification.style.color = color;
+
+          notification.innerHTML = `
+        <i class="fas fa-${icon}"></i>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+    `;
+
+          // Add to DOM
+          document.body.appendChild(notification);
+
+          // Trigger animation
+          setTimeout(() => {
+            notification.classList.add("show");
+          }, 100);
+
+          // Remove after 3 seconds
+          setTimeout(() => {
+            notification.classList.remove("show");
+            setTimeout(() => {
+              notification.remove();
+            }, 500);
+          }, 3000);
+        }
+      });
+    </script>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>
